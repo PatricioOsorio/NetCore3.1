@@ -1,0 +1,22 @@
+﻿@model CrearRolView
+
+@{
+  ViewData["Title"] = "Crear Rol";
+}
+
+<h1 class="display-4 fw-normal text-center mb-3">Crear Rol</h1>
+<div class="w-100 p-3 p-lg-5 border rounded-3">
+
+  <form method="post" asp-action="CrearRol">
+    <div class="text-danger" asp-validation-summary="All"></div>
+    <div class="mb-3">
+      <label class="form-label" asp-for="NombreRol"></label>
+      <input class="form-control" asp-for="NombreRol">
+      <span class="text-danger" asp-validation-for="NombreRol"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Nuevo</button>
+    <a class="btn btn-outline-secondary" asp-action="Index">Cancelar</a>
+
+  </form>
+</div>

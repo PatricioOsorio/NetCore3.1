@@ -1,0 +1,29 @@
+﻿@model DetailsView
+
+@{
+  ViewData["Title"] = "Details";
+  var fotoRuta = "/images/" + (Model.Amigo.FotoRuta ?? "user.png");
+}
+
+<h1 class="display-4 fw-normal text-center mb-3">Detalles amigo</h1>
+
+<div class="d-flex justify-content-center">
+  <div class="card mb-3" style="max-width: 40rem">
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img src="@fotoRuta" class="img-fluid rounded-start" alt="usuario">
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title">@Model.Amigo.Nombre</h5>
+          <p class="card-text">Id: @Model.Amigo.Id</p>
+          <p class="card-text">Ciudad: @Model.Amigo.Ciudad</p>
+          <p class="card-text">Correo: @Model.Amigo.Correo</p>
+          <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<a class="btn btn-outline-secondary" asp-controller="Amigo" asp-action="Index">Regresar</a>
