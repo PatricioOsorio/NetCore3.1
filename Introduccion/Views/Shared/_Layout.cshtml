@@ -1,4 +1,5 @@
-﻿@inject SignInManager<IdentityUser> SignInManager
+﻿
+@inject SignInManager<IdentityUser> SignInManager
 
 <!DOCTYPE html>
 <html>
@@ -50,7 +51,7 @@
                 </ul>
               </li>
             }
-            @if (SignInManager.IsSignedIn(User) && User.IsInRole("Administrador"))
+            @if (SignInManager.IsSignedIn(User) && (User.IsInRole("ADMINISTRADOR") || User.IsInRole("SYSADMIN")))
             {
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button">Administrador</a>
@@ -58,8 +59,8 @@
                   <li><a class="dropdown-item" asp-controller="Administracion" asp-action="Index">Ver Roles</a></li>
                   <li><a class="dropdown-item" asp-controller="Administracion" asp-action="CrearRol">Crear Rol</a></li>
                   <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" asp-controller="Usuarios" asp-action="Index">Ver Usuarios</a></li>
-                  <li><a class="dropdown-item" asp-controller="Usuarios" asp-action="CrearUsuario">Crear Usuario</a></li>
+                  <li><a class="dropdown-item" asp-controller="Administracion" asp-action="ListaUsuarios">Ver Usuarios</a></li>
+                  <li><a class="dropdown-item" asp-controller="Administracion" asp-action="CrearUsuario">Crear Usuario</a></li>
                 </ul>
               </li>
             }

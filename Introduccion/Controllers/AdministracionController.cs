@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Introduccion.Controllers
 {
-  [Authorize(Roles = "Administrador")]
+  [Authorize(Roles = "SYSADMIN, ADMINISTRADOR")]
   public class AdministracionController : Controller
   {
     private readonly RoleManager<IdentityRole> _roleManager;
@@ -190,6 +190,12 @@ namespace Introduccion.Controllers
       return RedirectToAction("EditarRol", new { Id = rolId });
     }
 
-
+    [HttpGet]
+    [Route("Administracion/ListaUsuarios")]
+    public IActionResult ListaUsuarios()
+    {
+      var users = _userManager.Users;
+      return View(users);
+    }
   }
 }
