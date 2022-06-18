@@ -4,7 +4,8 @@
   var fotoRuta = "/images/" + (Model.FotoRutaExistente ?? "user.png");
 }
 
-<h1 class="display-4 fw-normal text-center mb-3">Editar amigo</h1>
+<h1 class="display-4 text-center text-gradient mb-3 fw-bold">Editar amigo</h1>
+
 
 <div class="w-100 p-3 p-lg-5 border rounded-3">
   <form asp-controller="Amigo" asp-action="EditarAmigo" method="post" enctype="multipart/form-data">
@@ -50,8 +51,8 @@
       <img src="@fotoRuta" class="rounded border w-25 h-25" alt="@Model.Nombre">
     </div>
 
-    <button class="btn btn-warning">Editar</button>
-    <a class="btn btn-outline-secondary" asp-controller="Amigo" asp-action="Index">Cancelar</a>
+    <button class="btn btn-warning"><i class="fas fa-edit"></i> Editar</button>
+    <a class="btn btn-outline-secondary" asp-controller="Amigo" asp-action="Index"><i class="fas fa-arrow-alt-circle-left"></i> Cancelar</a>
 
   </form>
 </div>

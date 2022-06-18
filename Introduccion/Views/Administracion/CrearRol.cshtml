@@ -4,7 +4,8 @@
   ViewData["Title"] = "Crear Rol";
 }
 
-<h1 class="display-4 fw-normal text-center mb-3">Crear Rol</h1>
+<h1 class="display-4 text-center text-gradient fw-bold">Crear rol</h1>
+
 <div class="w-100 p-3 p-lg-5 border rounded-3">
 
   <form method="post" asp-action="CrearRol">
@@ -15,8 +16,8 @@
       <span class="text-danger" asp-validation-for="NombreRol"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Nuevo</button>
-    <a class="btn btn-outline-secondary" asp-action="Index">Cancelar</a>
+    <button type="submit" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Nuevo</button>
+    <a class="btn btn-outline-secondary" asp-action="Index"><i class="fas fa-arrow-alt-circle-left"></i> Cancelar</a>
 
   </form>
 </div>

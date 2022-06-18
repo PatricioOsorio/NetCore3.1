@@ -76,7 +76,7 @@ namespace Introduccion.Controllers
 
         amigos.NewAmigo(newAmigo);
 
-        return RedirectToAction("Details", new { id = newAmigo.Id });
+        return RedirectToAction("DetallesAmigo", new { id = newAmigo.Id });
       }
 
       return View();

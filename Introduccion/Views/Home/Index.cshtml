@@ -4,18 +4,16 @@
   ViewData["Title"] = "Index";
 }
 
-@*<div class="p-5 mb-4 bg-light rounded-3">
-  <div class="container-fluid py-5">
-    <h1 class="display-5 fw-bold">UNICORN</h1>
-    <p class="col-md-8 fs-4">Empresa ficticia...</p>
-    <button class="btn btn-primary btn-lg">Ejemplo de boton</button>
-  </div>
-</div>*@
-
 <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg mb-3">
   <div class="col-lg-7 p-3 p-lg-5 pt-lg-3">
     <h1 class="display-4 fw-bold lh-1">UNICORN</h1>
     <p class="lead">Inicio de dev Miguel</p>
+    <a class="btn btn-primary btn-lg" asp-controller="Cuentas" asp-action="IniciarSesion">
+      <i class="fas fa-sign-in-alt"></i> Iniciar sesion
+    </a>
+    <a class="btn btn-outline-secondary btn-lg" asp-controller="Cuentas" asp-action="Registro">
+      <i class="fas fa-user-plus"></i> Registro
+    </a>
   </div>
   <div class="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg">
     <img class="rounded-lg-3" src="~/images/brand/unicorn_wallpaper.jpg" alt="" width="720">

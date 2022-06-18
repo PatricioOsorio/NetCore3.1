@@ -1,12 +1,13 @@
 ﻿@model AmigoCrearModelo
 @{
-  ViewData["Title"] = "Agregar amigo";
+  ViewData["Title"] = "Crear amigo";
 }
 
-<h1 class="display-4 fw-normal text-center mb-3">Crear amigo</h1>
+<h1 class="display-4 text-center text-gradient mb-3 fw-bold">Crear amigo</h1>
+
 
 <div class="w-100 p-3 p-lg-5 border rounded-3">
-  <form asp-controller="Usuarios" asp-action="CrearUsuario" method="post" enctype="multipart/form-data">
+  <form asp-controller="Amigo" asp-action="CrearAmigo" method="post" enctype="multipart/form-data">
     <div class="row mb-3">
       <label class="col-sm-2 col-form-label" asp-for="Nombre"></label>
       <div class="col-sm-10">
@@ -41,7 +42,7 @@
       </div>
     </div>
 
-    <button class="btn btn-primary">Nuevo</button>
-    <a class="btn btn-outline-secondary" asp-controller="Amigo" asp-action="Index">Cancelar</a>
+    <button class="btn btn-primary"> <i class="fas fa-plus-circle"></i> Nuevo</button>
+    <a class="btn btn-outline-secondary" asp-controller="Amigo" asp-action="Index"><i class="fas fa-arrow-alt-circle-left"></i> Cancelar</a>
   </form>
 </div>
