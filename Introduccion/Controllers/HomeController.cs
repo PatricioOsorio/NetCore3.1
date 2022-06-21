@@ -35,9 +35,9 @@ namespace Introduccion.Controllers
         await _roleManager.CreateAsync(new IdentityRole("ADMINISTRADOR"));
         await _roleManager.CreateAsync(new IdentityRole("USUARIO"));
 
-        var newUserSysadmin = new IdentityUser { UserName = "sysadmin@hotmail.com" };
-        var newUserAdministrador = new IdentityUser { UserName = "administrador@hotmail.com" };
-        var newUserUsuario = new IdentityUser { UserName = "usuario@hotmail.com" };
+        var newUserSysadmin = new IdentityUser { UserName="sysadmin", Email = "sysadmin@hotmail.com" };
+        var newUserAdministrador = new IdentityUser { UserName="administrador", Email = "administrador@hotmail.com" };
+        var newUserUsuario = new IdentityUser { UserName="usuario", Email = "usuario@hotmail.com" };
 
         await _userManager.CreateAsync(newUserSysadmin, "Pato12345");
         await _userManager.AddToRoleAsync(newUserSysadmin, "SYSADMIN");

@@ -20,6 +20,8 @@ namespace Introduccion.Controllers
       _userManager = userManager;
     }
 
+    /* ======================================== ROLES ======================================== */
+
     [HttpGet]
     public IActionResult Index()
     {
@@ -115,6 +117,8 @@ namespace Introduccion.Controllers
       }
     }
 
+    /* ======================================== USUARIO ROL ======================================== */
+
     [HttpGet]
     [Route("Administracion/EditarUsuarioRol")]
     public async Task<IActionResult> EditarUsuarioRol(string rolId)
@@ -190,12 +194,76 @@ namespace Introduccion.Controllers
       return RedirectToAction("EditarRol", new { Id = rolId });
     }
 
+    /* ======================================== USUARIOS ======================================== */
     [HttpGet]
     [Route("Administracion/ListaUsuarios")]
     public IActionResult ListaUsuarios()
     {
       var users = _userManager.Users;
       return View(users);
+    }
+
+    [HttpGet]
+    [Route("Administracion/EditarUsuario")]
+    public async Task<IActionResult> EditarUsuario(string id)
+    {
+      var usuario = await _userManager.FindByIdAsync(id);
+
+      if (usuario == null)
+      {
+        ViewData["ErrorMessage"] = $"El Usuario con Id ({id}) no se ha encontrado";
+        return View("Error");
+      }
+
+      // Lista de notificaciones
+      var usuarioClaims = await _userManager.GetClaimsAsync(usuario);
+
+      // Regresa la lista de roles de usuario
+      var usuarioRoles = await _userManager.GetRolesAsync(usuario);
+
+      var model = new EditarUsuarioView
+      {
+        Id = usuario.Id,
+        NombreUsuario = usuario.UserName,
+        Email = usuario.Email,
+        Notificaciones = usuarioClaims.Select(c => c.Value).ToList(),
+        Roles = usuarioRoles
+      };
+
+      return View(model);
+    }
+
+    [HttpPost]
+    [Route("Administracion/EditarUsuario")]
+    public async Task<IActionResult> EditarUsuario(EditarUsuarioView editarUsuarioView)
+    {
+      var usuario = await _userManager.FindByIdAsync(editarUsuarioView.Id);
+
+      if (usuario == null)
+      {
+        ViewData["ErrorMessage"] = $"El Usuario con Id ({editarUsuarioView.Id}) no se ha encontrado";
+        return View("Error");
+      }
+      else
+      {
+        usuario.Email = editarUsuarioView.Email;
+        usuario.UserName = editarUsuarioView.NombreUsuario;
+
+        var result = await _userManager.UpdateAsync(usuario);
+
+        if (result.Succeeded)
+        {
+          return RedirectToAction("ListaUsuarios");
+        }
+
+        foreach (var error in result.Errors)
+        {
+          ModelState.AddModelError(string.Empty, error.Description);
+        }
+
+        return View(editarUsuarioView);
+      }
+
     }
   }
 }

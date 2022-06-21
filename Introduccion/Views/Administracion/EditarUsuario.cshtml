@@ -1,0 +1,79 @@
+﻿@model EditarUsuarioView
+
+@{
+  ViewData["Title"] = "Editar usuario";
+}
+
+<h1 class="display-4 text-center text-gradient fw-bold">Editar usuario</h1>
+
+<div class="w-100 p-3 p-lg-5 border bg-light rounded-3 bg-light">
+
+  <form method="post">
+    <div class="row mb-3">
+      <label class="col-sm-2 col-form-label" asp-for="Id"></label>
+      <div class="col-sm-10">
+        <input class="form-control" asp-for="Id" disabled>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <label class="col-sm-2 col-form-label" asp-for="Email"></label>
+      <div class="col-sm-10">
+        <input class="form-control" asp-for="Email">
+        <span class="text-danger" asp-validation-for="Email"></span>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <label class="col-sm-2 col-form-label" asp-for="NombreUsuario"></label>
+      <div class="col-sm-10">
+        <input class="form-control" asp-for="NombreUsuario">
+        <span class="text-danger" asp-validation-for="NombreUsuario"></span>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-warning"><i class="fas fa-edit"></i> Editar</button>
+    <a class="btn btn-outline-secondary" asp-action="ListaUsuarios"><i class="fas fa-arrow-alt-circle-left"></i> Cancelar</a>
+
+    <div class="text-danger" asp-validation-summary="All"></div>
+  </form>
+
+  <hr class="my-5" />
+
+  <h2 class="display-6 text-center text-gradient fw-normal">Usuario roles</h2>
+  <ul class="list-group list-group-numbered mb-3">
+    @if (Model.Roles.Any())
+    {
+
+      foreach (var rol in Model.Roles)
+      {
+        <li class="list-group-item">@rol</li>
+      }
+    }
+    else
+    {
+      <li class="list-group-item">Ninguno</li>
+    }
+  </ul>
+  <a class="btn btn-primary ">Gestionar roles</a>
+
+  <hr class="my-5" />
+
+  <h2 class="display-6 text-center text-gradient fw-normal">Usuario notificaciones</h2>
+  <ul class="list-group list-group-numbered mb-3">
+    @if (Model.Notificaciones.Any())
+    {
+      foreach (var claim in Model.Notificaciones)
+      {
+        <li class="list-group-item">@claim</li>
+
+      }
+    }
+    else
+    {
+      <li class="list-group-item">Ninguno</li>
+    }
+  </ul>
+  <a class="btn btn-primary ">Gestionar Notificaciones</a>
+
+
+</div>
+
