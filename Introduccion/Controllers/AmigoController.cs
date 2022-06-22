@@ -140,5 +140,31 @@ namespace Introduccion.Controllers
       }
       return nombreFichero;
     }
+
+    //[HttpPost]
+    //public async Task<IActionResult> BorarAmigo(int id)
+    //{
+    //  var amigo = amigos.GetAmigo(id);
+
+    //  if (amigo == null)
+    //  {
+    //    ViewData["ErrorMessage"] = $"Amigo con Id ({id}) no fue encontrado";
+    //    return View("Error");
+    //  }
+
+    //  var result = amigos.DeleteAmigo(id);
+
+    //  if (result.Succeeded)
+    //  {
+    //    return RedirectToAction("Index");
+    //  }
+
+    //  foreach (var error in result.Errors)
+    //  {
+    //    ModelState.AddModelError(string.Empty, error.Description);
+    //  }
+
+    //  return View("ListaRoles");
+    //}
   }
 }

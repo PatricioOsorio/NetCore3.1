@@ -40,6 +40,19 @@
         integrity="sha512-YzwGgFdO1NQw1CZkPoGyRkEnUTxPSbGWXvGiXrWk8IeSqdyci0dEDYdLLjMxq1zCoU0QBa4kHAFiRhUL3z2bow=="
         crossorigin="anonymous"
         referrerpolicy="no-referrer" />
+
+  @* Sweetalert2 JS*@
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.18/sweetalert2.all.min.js"
+          integrity="sha512-4+OQqM/O4AkUlCzcn4hcNN7nFwYTYiuMQlhPjdi0Vcpn2ALkrIStJZkxCNauh9WiY6Fkc0FbelhU13feOuX5/A=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer"></script>
+
+  @* Sweetalert2 CSS*@
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.18/sweetalert2.min.css"
+        integrity="sha512-CJ5goVzT/8VLx0FE2KJwDxA7C6gVMkIGKDx31a84D7P4V3lOVJlGUhC2mEqmMHOFotYv4O0nqAOD0sEzsaLMBg=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer" />
 </head>
 <body class="d-flex flex-column min-vh-100">
   <header>
@@ -85,7 +98,7 @@
                 </a>
                 <ul class="dropdown-menu">
                   <li>
-                    <a class="dropdown-item" asp-controller="Administracion" asp-action="Index">
+                    <a class="dropdown-item" asp-controller="Administracion" asp-action="ListaRoles">
                       <i class="fas fa-info-circle"></i> Ver Roles
                     </a>
                   </li>

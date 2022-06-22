@@ -23,7 +23,8 @@ namespace Introduccion.Controllers
     /* ======================================== ROLES ======================================== */
 
     [HttpGet]
-    public IActionResult Index()
+    [Route("Administracion/ListaRoles")]
+    public IActionResult ListaRoles()
     {
       var roles = _roleManager.Roles;
       return View(roles);
@@ -50,7 +51,7 @@ namespace Introduccion.Controllers
         IdentityResult identityResult = await _roleManager.CreateAsync(identityRole);
         if (identityResult.Succeeded)
         {
-          return RedirectToAction("Index", "Home");
+          return RedirectToAction("ListaRoles", "Administracion");
         }
 
         foreach (var error in identityResult.Errors)
@@ -117,6 +118,32 @@ namespace Introduccion.Controllers
       }
     }
 
+    [HttpPost]
+    [Route("Administracion/BorrarRol")]
+    public async Task<IActionResult> BorrarRol(string id)
+    {
+      var rol = await _roleManager.FindByIdAsync(id);
+
+      if (rol == null)
+      {
+        ViewData["ErrorMessage"] = $"Rol con Id ({id}) no fue encontrado";
+        return View("Error");
+      }
+
+      var result = await _roleManager.DeleteAsync(rol);
+
+      if (result.Succeeded)
+      {
+        return RedirectToAction("ListaRoles");
+      }
+
+      foreach (var error in result.Errors)
+      {
+        ModelState.AddModelError(string.Empty, error.Description);
+      }
+
+      return View("ListaRoles");
+    }
     /* ======================================== USUARIO ROL ======================================== */
 
     [HttpGet]
@@ -264,6 +291,33 @@ namespace Introduccion.Controllers
         return View(editarUsuarioView);
       }
 
+    }
+
+    [HttpPost]
+    [Route("Administracion/BorrarUsuario")]
+    public async Task<IActionResult> BorrarUsuario(string id)
+    {
+      var user = await _userManager.FindByIdAsync(id);
+
+      if (user == null)
+      {
+        ViewData["ErrorMessage"] = $"Usuario con Id ({id}) no fue encontrado";
+        return View("Error");
+      }
+
+      var result = await _userManager.DeleteAsync(user);
+
+      if (result.Succeeded)
+      {
+        return RedirectToAction("ListaUsuarios");
+      }
+
+      foreach (var error in result.Errors)
+      {
+        ModelState.AddModelError(string.Empty, error.Description);
+      }
+
+      return View("ListaUsuarios");
     }
   }
 }
