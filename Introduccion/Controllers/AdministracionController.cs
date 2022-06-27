@@ -3,10 +3,11 @@ using Introduccion.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
-
 namespace Introduccion.Controllers
 {
   [Authorize(Roles = "SYSADMIN, ADMINISTRADOR")]
@@ -120,6 +121,7 @@ namespace Introduccion.Controllers
 
     [HttpPost]
     [Route("Administracion/BorrarRol")]
+    [Authorize(Policy = "BorrarRolPolicy")]
     public async Task<IActionResult> BorrarRol(string id)
     {
       var rol = await _roleManager.FindByIdAsync(id);
@@ -132,10 +134,7 @@ namespace Introduccion.Controllers
 
       var result = await _roleManager.DeleteAsync(rol);
 
-      if (result.Succeeded)
-      {
-        return RedirectToAction("ListaRoles");
-      }
+      if (result.Succeeded) return RedirectToAction("ListaRoles");
 
       foreach (var error in result.Errors)
       {
@@ -144,6 +143,7 @@ namespace Introduccion.Controllers
 
       return View("ListaRoles");
     }
+
     /* ======================================== USUARIO ROL ======================================== */
 
     [HttpGet]
@@ -221,6 +221,157 @@ namespace Introduccion.Controllers
       return RedirectToAction("EditarRol", new { Id = rolId });
     }
 
+    /* ======================================== GESTIONAR ROLES USUARIO ======================================== */
+    [HttpGet]
+    [Route("Administracion/GestionarRolesUsuario")]
+    public async Task<IActionResult> GestionarRolesUsuario(string idUsuario)
+    {
+      ViewBag.IdUsuario = idUsuario;
+
+      var user = await _userManager.FindByIdAsync(idUsuario);
+
+      if (user == null)
+      {
+        ViewData["ErrorMessage"] = $"El usuario con id: (${idUsuario}) no fue encontrado";
+        return View("Error");
+      }
+
+      var model = new List<RolUsuarioView>();
+
+      foreach (var rol in _roleManager.Roles)
+      {
+        var rolUsuarioView = new RolUsuarioView
+        {
+          RolId = rol.Id,
+          RolNombre = rol.Name
+        };
+
+        rolUsuarioView.EstaSeleccionado = await _userManager.IsInRoleAsync(user, rol.Name);
+
+        model.Add(rolUsuarioView);
+      }
+
+      return View(model);
+    }
+
+    [HttpPost]
+    [Route("Administracion/GestionarRolesUsuario")]
+    public async Task<IActionResult> GestionarRolesUsuario(List<RolUsuarioView> rolUsuarioViews, string idUsuario)
+    {
+      var user = await _userManager.FindByIdAsync(idUsuario);
+
+      if (user is null)
+      {
+        ViewData["ErrorMessage"] = $"El usuario con id: (${idUsuario}) no existe";
+        return View("Error");
+      }
+
+      var roles = await _userManager.GetRolesAsync(user);
+      var result = await _userManager.RemoveFromRoleAsync(user, roles.ToString());
+
+      if (!result.Succeeded)
+      {
+        ModelState.AddModelError(string.Empty, "No podemos borrar usuarios con roles");
+        return View(rolUsuarioViews);
+      }
+
+      result = await _userManager.AddToRolesAsync(
+        user,
+        rolUsuarioViews
+          .Where(x => x.EstaSeleccionado)
+          .Select(y => y.RolNombre)
+       );
+
+      if (!result.Succeeded)
+      {
+        ModelState.AddModelError(string.Empty, "No podemos añadir roles al usuario seleccionados");
+        return View(rolUsuarioViews);
+      }
+
+      return RedirectToAction("EditarUsuario", new { Id = idUsuario });
+    }
+
+    [HttpGet]
+    [Route("Administracion/GestionarUsuarioClaims")]
+    public async Task<IActionResult> GestionarUsuarioClaims(string idUsuario)
+    {
+      var user = await _userManager.FindByIdAsync(idUsuario);
+
+      if (user == null)
+      {
+        ViewData["ErrorMessage"] = $"El usuario con id: (${idUsuario}) no existe";
+        return View("Error");
+      }
+
+      var userClaims = await _userManager.GetClaimsAsync(user);
+
+      var model = new UserClaimsViewModel()
+      {
+        IdUser = idUsuario
+      };
+
+      // Recorremos los claims
+      foreach (Claim claim in RepositoryClaims.AllClaims)
+      {
+        UserClaims userClaim = new UserClaims
+        {
+          TypeClaim = claim.Type
+        };
+
+        // Si el usuario tiene el claim que estamos recorriendo en este momento lo seleccionamos
+        if (userClaims.Any(c => c.Type == claim.Type && c.Value == "true"))
+        {
+          userClaim.IsSelected = true;
+        }
+
+        model.Claims.Add(userClaim);
+      }
+
+      return View(model);
+    }
+
+    [HttpPost]
+    [Route("Administracion/GestionarUsuarioClaims")]
+    public async Task<IActionResult> GestionarUsuarioClaims(UserClaimsViewModel model)
+    {
+      var user = await _userManager.FindByIdAsync(model.IdUser);
+
+      if (user == null)
+      {
+        ViewData["ErrorMessage"] = $"El usuario con id: ({model.IdUser}) no existe";
+        return View("Error");
+      }
+
+      // Obtenemos los claims del usuario y los borramos
+      var claims = await _userManager.GetClaimsAsync(user);
+
+      var userClaims = await _userManager.GetClaimsAsync(user);
+
+      var result = await _userManager.RemoveClaimsAsync(user, claims);
+
+      if (!result.Succeeded)
+      {
+        ModelState.AddModelError(string.Empty, "No se pueden borrar los claims de este usuario");
+        return View(model);
+      }
+
+      // Volvemos a asociar lo seleccionado a la interfaz grafica
+      result = await _userManager.AddClaimsAsync(
+        user,
+        model.Claims
+          .Where(c => c.IsSelected)
+          .Select(c => new Claim(c.TypeClaim, c.IsSelected ? "true" : "false"))
+        );
+
+      if (!result.Succeeded)
+      {
+        ModelState.AddModelError(string.Empty, "No se agregar claims a este usuario");
+        return View(model);
+      }
+
+      return RedirectToAction("EditarUsuario", new { Id = model.IdUser });
+    }
+
     /* ======================================== USUARIOS ======================================== */
     [HttpGet]
     [Route("Administracion/ListaUsuarios")]
@@ -253,7 +404,7 @@ namespace Introduccion.Controllers
         Id = usuario.Id,
         NombreUsuario = usuario.UserName,
         Email = usuario.Email,
-        Notificaciones = usuarioClaims.Select(c => c.Value).ToList(),
+        Notificaciones = usuarioClaims.Select(c => $"{c.Type}: {c.Value}").ToList(),
         Roles = usuarioRoles
       };
 

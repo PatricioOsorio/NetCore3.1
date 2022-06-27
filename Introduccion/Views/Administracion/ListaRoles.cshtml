@@ -1,4 +1,6 @@
 ﻿@model IEnumerable<IdentityRole>
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService authorizationService;
 
 @{
   ViewData["Title"] = "Roles";
@@ -27,7 +29,10 @@
           <td>@rol.Id</td>
           <td>@rol.Name</td>
           <td class="d-flex justify-content-center">
-            <a class="btn btn-warning mx-1" asp-controller="Administracion" asp-action="EditarRol" asp-route-id="@rol.Id"><i class="fas fa-edit"></i> Editar</a>
+            @if ((await authorizationService.AuthorizeAsync(User, "EditarRolPolicy")).Succeeded)
+            {
+              <a class="btn btn-warning mx-1" asp-controller="Administracion" asp-action="EditarRol" asp-route-id="@rol.Id"><i class="fas fa-edit"></i> Editar</a>
+            }
             <a id="AlertaEliminarRol" class="btn btn-danger mx-1" data-id="@rol.Id" data-name="@rol.Name"><i class="fas fa-minus-circle"></i> Eliminar</a>
           </td>
         </tr>

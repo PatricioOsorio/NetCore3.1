@@ -53,11 +53,11 @@
       <li class="list-group-item">Ninguno</li>
     }
   </ul>
-  <a class="btn btn-primary ">Gestionar roles</a>
+  <a class="btn btn-primary" asp-action="GestionarRolesUsuario" asp-route-IdUsuario="@Model.Id">Gestionar roles</a>
 
   <hr class="my-5" />
 
-  <h2 class="display-6 text-center text-gradient fw-normal">Usuario notificaciones</h2>
+  <h2 class="display-6 text-center text-gradient fw-normal">Usuario claims</h2>
   <ul class="list-group list-group-numbered mb-3">
     @if (Model.Notificaciones.Any())
     {
@@ -72,8 +72,6 @@
       <li class="list-group-item">Ninguno</li>
     }
   </ul>
-  <a class="btn btn-primary ">Gestionar Notificaciones</a>
-
-
+  <a class="btn btn-primary" asp-action="GestionarUsuarioClaims" asp-route-IdUsuario="@Model.Id">Gestionar Claims</a>
 </div>
 

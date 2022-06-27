@@ -41,49 +41,68 @@ namespace Introduccion
         options.AccessDeniedPath = "/Cuentas/AccesoDenegado";
       });
 
-    // Configuraciones de los requerimientos de la contraseña
-    services.Configure<IdentityOptions>(opciones =>
+      // Configuraciones de los requerimientos de la contraseña
+      services.Configure<IdentityOptions>(opciones =>
+        {
+          opciones.Password.RequiredLength = 8;
+          opciones.Password.RequiredUniqueChars = 3;
+          opciones.Password.RequireNonAlphanumeric = false;
+        });
+
+      // Configuracion claims
+      services.AddAuthorization(options =>
       {
-        opciones.Password.RequiredLength = 8;
-        opciones.Password.RequiredUniqueChars = 3;
-        opciones.Password.RequireNonAlphanumeric = false;
+        options.AddPolicy("BorrarRolPolicy", policy => policy.RequireClaim("Borrar rol"));
+
+        //options.AddPolicy("EditarRolPolicy",
+        //  policy => policy.RequireClaim("Editar rol", "true")
+        //    .RequireRole("ADMINISTRADOR")
+        //    .RequireRole("SUSADMIN")
+        //);
+
+        options.AddPolicy("EditarRolPolicy", policy => policy.RequireAssertion(context =>
+          context.User.IsInRole("ADMINISTRADOR") &&
+          context.User.HasClaim(claim => claim.Type == "Editar Rol" && claim.Value == "true") ||
+          context.User.IsInRole("SYSADMIN")
+        ));
       });
     }
 
-// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-{
-  if (env.IsDevelopment())
-  {
-    app.UseDeveloperExceptionPage();
-  }
-  else
-  {
-    //app.UseExceptionHandler("/Error/{0}");
-    app.UseExceptionHandler("/Error");
-    app.UseStatusCodePagesWithRedirects("/Error/{0}");
-  }
 
-  app.UseStaticFiles();
+    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+      if (env.IsDevelopment())
+      {
+        app.UseDeveloperExceptionPage();
+      }
+      else
+      {
+        //app.UseExceptionHandler("/Error/{0}");
+        app.UseExceptionHandler("/Error");
+        app.UseStatusCodePagesWithRedirects("/Error/{0}");
+      }
 
-  app.UseAuthentication();
+      app.UseStaticFiles();
 
-  app.UseMvc(routes =>
-  {
-    routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
-  });
+      app.UseAuthentication();
 
-
-  //app.UseRouting();
-
-  //app.UseAuthorization();
-
-  //app.UseEndpoints(endpoints =>
-  //{
-  //  endpoints.MapRazorPages();
-  //});
+      app.UseMvc(routes =>
+      {
+        routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
+      });
 
 
-}
+      //app.UseRouting();
+
+      //app.UseAuthorization();
+
+      //app.UseEndpoints(endpoints =>
+      //{
+      //  endpoints.MapRazorPages();
+      //});
+
+
+    }
   }
 }

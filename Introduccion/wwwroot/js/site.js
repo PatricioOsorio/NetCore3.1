@@ -1,4 +1,25 @@
-﻿document.addEventListener('click', (e) => {
+﻿// Toast
+const showToast = (message, icon = 'success', time = 3000) => {
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    showCloseButton: true,
+    timer: time,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer);
+      toast.addEventListener('mouseleave', Swal.resumeTimer);
+    },
+  });
+
+  Toast.fire({
+    icon: icon,
+    title: message,
+  });
+};
+
+document.addEventListener('click', (e) => {
   // Alerta borrar rol
   if (e.target.matches('#AlertaEliminarRol')) {
     Swal.fire({
@@ -28,10 +49,14 @@
               location.href = '/Administracion/ListaRoles';
             });
           },
+          error: function (error) {
+            showToast("No es posible eliminar el rol, existen usuarios dentro del rol", "error", 8000)
+          },
         });
       }
     });
   }
+
   // Alerta borrar usuario
   if (e.target.matches('#AlertaEliminarUsuario')) {
     Swal.fire({
